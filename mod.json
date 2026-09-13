@@ -1,0 +1,15 @@
+{
+  "geode": "v5.10.1",
+  "gd": {
+    "win": "2.2081",
+    "android": "2.2081"
+  },
+  "id": "chigui.demon-tracker",
+  "name": "Demon Tracker",
+  "version": "v0.1.0",
+  "developer": "Chigui-07",
+  "description": "A personal Geometry Dash demon tracker with permanent difficulty rankings.",
+  "dependencies": {
+    "geode.node-ids": ">=v1.23.3"
+  }
+}
