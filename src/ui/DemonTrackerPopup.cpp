@@ -24,7 +24,7 @@ bool DemonTrackerPopup::init() {
     this->createCategoryButton("INSANE", 4, ccp(-55.f, -65.f));
     this->createCategoryButton("EXTREME", 5, ccp(55.f, -65.f));
 
-    auto footer = CCLabelBMFont::create("v0.1.1 - listas iniciales", "goldFont.fnt");
+    auto footer = CCLabelBMFont::create("v0.1.2 - niveles interactivos", "goldFont.fnt");
     footer->setScale(.32f);
     footer->setOpacity(150);
     m_mainLayer->addChildAtPosition(footer, Anchor::Bottom, ccp(0.f, 12.f));
