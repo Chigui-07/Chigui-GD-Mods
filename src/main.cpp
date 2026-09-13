@@ -1,6 +1,8 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/MenuLayer.hpp>
 
+#include "ui/DemonTrackerPopup.hpp"
+
 using namespace geode::prelude;
 
 class $modify(DemonTrackerMenuLayer, MenuLayer) {
@@ -27,10 +29,8 @@ class $modify(DemonTrackerMenuLayer, MenuLayer) {
     }
 
     void onDemonTracker(CCObject*) {
-        FLAlertLayer::create(
-            "Demon Tracker",
-            "<cg>Demon Tracker v0.1.0</c> esta cargado correctamente.\n\nSiguiente paso: construir la interfaz de listas y el sistema de clasificacion.",
-            "OK"
-        )->show();
+        if (auto popup = DemonTrackerPopup::create()) {
+            popup->show();
+        }
     }
 };

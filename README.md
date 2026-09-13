@@ -8,7 +8,7 @@ El `README.md` funciona también como **bitácora principal del proyecto**: aqu�
 
 ### 1. Demon Tracker
 
-**Estado:** Base v0.1 probada en Android  
+**Estado:** Interfaz v0.1 implementada  
 **Prioridad:** Principal
 
 Objetivo: crear un sistema personal de clasificación de demons basado en la experiencia real del jugador al completar cada nivel.
@@ -109,6 +109,10 @@ Ruleta aleatoria para niveles normales de Geometry Dash, con filtros y posibles 
 - Corregido el formato de versión de Geode en `mod.json`.
 - Primera compilación multiplataforma completada correctamente.
 - **Primera prueba real en Android completada con éxito:** Geode carga Demon Tracker y el botón de prueba funciona dentro de Geometry Dash.
+- Creada la primera interfaz propia de **Demon Tracker** usando el sistema `Popup` de Geode.
+- Añadidos botones para `ALL`, `EASY`, `MEDIUM`, `HARD`, `INSANE` y `EXTREME`.
+- Añadidos los indicadores iniciales `Hardest: ---` y `Demons registrados: 0`.
+- Separada la interfaz en `src/ui/DemonTrackerPopup.hpp` y `src/ui/DemonTrackerPopup.cpp` para mantener el proyecto ordenado.
 
 ## Plataformas objetivo
 
