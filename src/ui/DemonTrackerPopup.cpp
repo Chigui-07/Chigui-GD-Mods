@@ -1,4 +1,6 @@
 #include "DemonTrackerPopup.hpp"
+#include "DemonListPopup.hpp"
+#include "../data/DemonData.hpp"
 
 bool DemonTrackerPopup::init() {
     if (!Popup::init(420.f, 250.f)) {
@@ -7,11 +9,11 @@ bool DemonTrackerPopup::init() {
 
     this->setTitle("Demon Tracker");
 
-    auto hardestLabel = CCLabelBMFont::create("Hardest: ---", "bigFont.fnt");
+    auto hardestLabel = CCLabelBMFont::create("Hardest: Deadlocked", "bigFont.fnt");
     hardestLabel->setScale(.55f);
     m_mainLayer->addChildAtPosition(hardestLabel, Anchor::Center, ccp(0.f, 68.f));
 
-    auto countLabel = CCLabelBMFont::create("Demons registrados: 0", "goldFont.fnt");
+    auto countLabel = CCLabelBMFont::create("Demons registrados: 25", "goldFont.fnt");
     countLabel->setScale(.48f);
     m_mainLayer->addChildAtPosition(countLabel, Anchor::Center, ccp(0.f, 45.f));
 
@@ -22,7 +24,7 @@ bool DemonTrackerPopup::init() {
     this->createCategoryButton("INSANE", 4, ccp(-55.f, -65.f));
     this->createCategoryButton("EXTREME", 5, ccp(55.f, -65.f));
 
-    auto footer = CCLabelBMFont::create("v0.1.0 - interfaz inicial", "goldFont.fnt");
+    auto footer = CCLabelBMFont::create("v0.1.1 - listas iniciales", "goldFont.fnt");
     footer->setScale(.32f);
     footer->setOpacity(150);
     m_mainLayer->addChildAtPosition(footer, Anchor::Bottom, ccp(0.f, 12.f));
@@ -56,27 +58,20 @@ CCMenuItemSpriteExtra* DemonTrackerPopup::createCategoryButton(
 
 void DemonTrackerPopup::onCategory(CCObject* sender) {
     auto node = static_cast<CCNode*>(sender);
+    auto category = DemonCategory::All;
 
-    char const* category = "ALL";
     switch (node->getTag()) {
-        case 1: category = "EASY DEMONS"; break;
-        case 2: category = "MEDIUM DEMONS"; break;
-        case 3: category = "HARD DEMONS"; break;
-        case 4: category = "INSANE DEMONS"; break;
-        case 5: category = "EXTREME DEMONS"; break;
-        default: category = "TODOS LOS DEMONS"; break;
+        case 1: category = DemonCategory::Easy; break;
+        case 2: category = DemonCategory::Medium; break;
+        case 3: category = DemonCategory::Hard; break;
+        case 4: category = DemonCategory::Insane; break;
+        case 5: category = DemonCategory::Extreme; break;
+        default: category = DemonCategory::All; break;
     }
 
-    auto message = fmt::format(
-        "La lista de <cy>{}</c> se conectara al sistema de ranking en la siguiente etapa.",
-        category
-    );
-
-    FLAlertLayer::create(
-        "Demon Tracker",
-        message.c_str(),
-        "OK"
-    )->show();
+    if (auto popup = DemonListPopup::create(category)) {
+        popup->show();
+    }
 }
 
 DemonTrackerPopup* DemonTrackerPopup::create() {
