@@ -15,8 +15,10 @@ enum class DemonCategory {
 struct DemonEntry {
     std::string name;
     DemonCategory category;
+    int officialLevelID;
 };
 
 std::vector<DemonEntry> const& getDemonEntries();
 std::vector<DemonEntry const*> getDemonEntries(DemonCategory category);
 char const* getDemonCategoryTitle(DemonCategory category);
+int getDemonGlobalRank(DemonEntry const& demon);
