@@ -8,7 +8,7 @@ El `README.md` funciona también como **bitácora principal del proyecto**: aqu�
 
 ### 1. Demon Tracker
 
-**Estado:** Base v0.1 creada  
+**Estado:** Base v0.1 probada en Android  
 **Prioridad:** Principal
 
 Objetivo: crear un sistema personal de clasificación de demons basado en la experiencia real del jugador al completar cada nivel.
@@ -106,6 +106,9 @@ Ruleta aleatoria para niveles normales de Geometry Dash, con filtros y posibles 
 - Añadidos `mod.json`, `CMakeLists.txt`, `src/main.cpp`, `about.md`, `changelog.md` y `.gitignore`.
 - Añadido un botón de prueba en el menú principal para comprobar que el mod carga correctamente.
 - Añadida compilación automática para Windows, Android 32-bit y Android 64-bit mediante GitHub Actions.
+- Corregido el formato de versión de Geode en `mod.json`.
+- Primera compilación multiplataforma completada correctamente.
+- **Primera prueba real en Android completada con éxito:** Geode carga Demon Tracker y el botón de prueba funciona dentro de Geometry Dash.
 
 ## Plataformas objetivo
 
