@@ -6,7 +6,7 @@
   },
   "id": "chigui.demon-tracker",
   "name": "Demon Tracker",
-  "version": "v0.1.1",
+  "version": "v0.1.2",
   "developer": "Chigui-07",
   "description": "A personal Geometry Dash demon tracker with permanent difficulty rankings.",
   "dependencies": {
