@@ -2,31 +2,31 @@
 
 std::vector<DemonEntry> const& getDemonEntries() {
     static const std::vector<DemonEntry> entries = {
-        {"Deadlocked", DemonCategory::Easy},
-        {"Retro Circles", DemonCategory::Easy},
-        {"Glorious Fortress", DemonCategory::Easy},
-        {"Beautiful and Damned", DemonCategory::Easy},
-        {"Clubstep", DemonCategory::Easy},
-        {"WEIRD", DemonCategory::Easy},
-        {"Otis", DemonCategory::Easy},
-        {"Insomnia", DemonCategory::Easy},
-        {"ISpyWithMyLittleEye", DemonCategory::Easy},
-        {"Sky High", DemonCategory::Easy},
-        {"V01D", DemonCategory::Easy},
-        {"Blindfolder", DemonCategory::Easy},
-        {"Pjork", DemonCategory::Easy},
-        {"Shiver", DemonCategory::Easy},
-        {"Xstep V2", DemonCategory::Easy},
-        {"Blue Hell", DemonCategory::Easy},
-        {"Crescendo", DemonCategory::Easy},
-        {"What is it", DemonCategory::Easy},
-        {"Lights and Thunder", DemonCategory::Easy},
-        {"Platinum Adventure", DemonCategory::Easy},
-        {"Ruins of Destiny", DemonCategory::Easy},
-        {"ABCDEFGHIJKLMNOPQRS", DemonCategory::Easy},
-        {"Demon Mixed", DemonCategory::Easy},
-        {"The Nightmare", DemonCategory::Easy},
-        {"The Lightning Road", DemonCategory::Easy}
+        {"Deadlocked", DemonCategory::Easy, 20},
+        {"Retro Circles", DemonCategory::Easy, 0},
+        {"Glorious Fortress", DemonCategory::Easy, 0},
+        {"Beautiful and Damned", DemonCategory::Easy, 0},
+        {"Clubstep", DemonCategory::Easy, 14},
+        {"WEIRD", DemonCategory::Easy, 0},
+        {"Otis", DemonCategory::Easy, 0},
+        {"Insomnia", DemonCategory::Easy, 0},
+        {"ISpyWithMyLittleEye", DemonCategory::Easy, 0},
+        {"Sky High", DemonCategory::Easy, 0},
+        {"V01D", DemonCategory::Easy, 0},
+        {"Blindfolder", DemonCategory::Easy, 0},
+        {"Pjork", DemonCategory::Easy, 0},
+        {"Shiver", DemonCategory::Easy, 0},
+        {"Xstep V2", DemonCategory::Easy, 0},
+        {"Blue Hell", DemonCategory::Easy, 0},
+        {"Crescendo", DemonCategory::Easy, 0},
+        {"What is it", DemonCategory::Easy, 0},
+        {"Lights and Thunder", DemonCategory::Easy, 0},
+        {"Platinum Adventure", DemonCategory::Easy, 0},
+        {"Ruins of Destiny", DemonCategory::Easy, 0},
+        {"ABCDEFGHIJKLMNOPQRS", DemonCategory::Easy, 0},
+        {"Demon Mixed", DemonCategory::Easy, 0},
+        {"The Nightmare", DemonCategory::Easy, 0},
+        {"The Lightning Road", DemonCategory::Easy, 0}
     };
     return entries;
 }
@@ -50,4 +50,14 @@ char const* getDemonCategoryTitle(DemonCategory category) {
         case DemonCategory::Extreme: return "Extreme Demons";
         default: return "All Demons";
     }
+}
+
+int getDemonGlobalRank(DemonEntry const& demon) {
+    auto const& entries = getDemonEntries();
+    for (size_t i = 0; i < entries.size(); ++i) {
+        if (&entries[i] == &demon) {
+            return static_cast<int>(i) + 1;
+        }
+    }
+    return 0;
 }
