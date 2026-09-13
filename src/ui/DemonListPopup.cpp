@@ -1,4 +1,5 @@
 #include "DemonListPopup.hpp"
+#include "DemonDetailPopup.hpp"
 #include <Geode/ui/ScrollLayer.hpp>
 
 bool DemonListPopup::init(DemonCategory category) {
@@ -7,19 +8,20 @@ bool DemonListPopup::init(DemonCategory category) {
     }
 
     m_category = category;
+    m_demons = getDemonEntries(category);
     this->setTitle(getDemonCategoryTitle(category));
 
-    auto demons = getDemonEntries(category);
-    auto countText = fmt::format("Demons registrados: {}", demons.size());
+    auto countText = fmt::format("Demons registrados: {}", m_demons.size());
     auto countLabel = CCLabelBMFont::create(countText.c_str(), "goldFont.fnt");
     countLabel->setScale(.42f);
     m_mainLayer->addChildAtPosition(countLabel, Anchor::Center, ccp(0.f, 82.f));
 
     auto list = ScrollLayer::create({350.f, 175.f});
-    list->m_contentLayer->setLayout(ScrollLayer::createDefaultListLayout(2.f));
+    list->m_contentLayer->setLayout(ScrollLayer::createDefaultListLayout(3.f));
     list->setTouchEnabled(true);
+    list->setStealingTouches(true);
 
-    if (demons.empty()) {
+    if (m_demons.empty()) {
         auto emptyRow = CCNode::create();
         emptyRow->setContentSize({340.f, 36.f});
 
@@ -34,9 +36,14 @@ bool DemonListPopup::init(DemonCategory category) {
         list->m_contentLayer->addChild(emptyRow);
     }
     else {
-        for (size_t i = 0; i < demons.size(); ++i) {
+        for (size_t i = 0; i < m_demons.size(); ++i) {
             list->m_contentLayer->addChild(
-                this->createDemonRow(static_cast<int>(i) + 1, *demons[i], 340.f)
+                this->createDemonRow(
+                    static_cast<int>(i) + 1,
+                    static_cast<int>(i),
+                    *m_demons[i],
+                    340.f
+                )
             );
         }
     }
@@ -54,24 +61,53 @@ bool DemonListPopup::init(DemonCategory category) {
     return true;
 }
 
-CCNode* DemonListPopup::createDemonRow(int rank, DemonEntry const& demon, float width) {
-    auto row = CCNode::create();
-    row->setContentSize({width, 22.f});
+CCNode* DemonListPopup::createDemonRow(
+    int rank,
+    int index,
+    DemonEntry const& demon,
+    float width
+) {
+    auto row = CCMenu::create();
+    row->setContentSize({width, 25.f});
+    row->setAnchorPoint({0.f, 0.f});
+    row->setPosition({0.f, 0.f});
 
-    auto rankText = fmt::format("#{}", rank);
-    auto rankLabel = CCLabelBMFont::create(rankText.c_str(), "goldFont.fnt");
-    rankLabel->setScale(.42f);
-    rankLabel->setAnchorPoint({0.f, .5f});
-    rankLabel->setPosition({8.f, 11.f});
-    row->addChild(rankLabel);
+    auto rowText = fmt::format("#{}  {}", rank, demon.name);
+    auto sprite = ButtonSprite::create(
+        rowText.c_str(),
+        "bigFont.fnt",
+        "GJ_button_01.png",
+        .8f
+    );
+    sprite->setScale(.45f);
 
-    auto nameLabel = CCLabelBMFont::create(demon.name.c_str(), "bigFont.fnt");
-    nameLabel->setScale(.40f);
-    nameLabel->setAnchorPoint({0.f, .5f});
-    nameLabel->setPosition({58.f, 11.f});
-    row->addChild(nameLabel);
+    auto button = CCMenuItemSpriteExtra::create(
+        sprite,
+        this,
+        menu_selector(DemonListPopup::onDemonSelected)
+    );
+    button->setTag(index);
+    button->setPosition({width / 2.f, 12.5f});
+    row->addChild(button);
 
     return row;
+}
+
+void DemonListPopup::onDemonSelected(CCObject* sender) {
+    auto node = static_cast<CCNode*>(sender);
+    auto index = node->getTag();
+
+    if (index < 0 || index >= static_cast<int>(m_demons.size())) {
+        return;
+    }
+
+    auto demon = m_demons[index];
+    auto globalRank = getDemonGlobalRank(*demon);
+    auto categoryRank = index + 1;
+
+    if (auto popup = DemonDetailPopup::create(demon, globalRank, categoryRank)) {
+        popup->show();
+    }
 }
 
 DemonListPopup* DemonListPopup::create(DemonCategory category) {
