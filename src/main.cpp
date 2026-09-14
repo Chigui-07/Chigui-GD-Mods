@@ -1,6 +1,7 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/MenuLayer.hpp>
 
+#include "data/DemonData.hpp"
 #include "ui/DemonTrackerPopup.hpp"
 
 using namespace geode::prelude;
@@ -11,7 +12,8 @@ class $modify(DemonTrackerMenuLayer, MenuLayer) {
             return false;
         }
 
-        log::info("Demon Tracker v0.1.0 loaded successfully.");
+        initializeDemonData();
+        log::info("Demon Tracker v0.2.0 loaded successfully.");
 
         auto button = CCMenuItemSpriteExtra::create(
             CCSprite::createWithSpriteFrameName("GJ_likeBtn_001.png"),

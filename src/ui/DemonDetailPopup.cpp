@@ -5,7 +5,7 @@ bool DemonDetailPopup::init(
     int globalRank,
     int categoryRank
 ) {
-    if (!Popup::init(410.f, 240.f)) {
+    if (!Popup::init(410.f, 245.f)) {
         return false;
     }
 
@@ -18,7 +18,7 @@ bool DemonDetailPopup::init(
     auto globalText = fmt::format("Ranking general: #{}", globalRank);
     auto globalLabel = CCLabelBMFont::create(globalText.c_str(), "bigFont.fnt");
     globalLabel->setScale(.46f);
-    m_mainLayer->addChildAtPosition(globalLabel, Anchor::Center, ccp(0.f, 58.f));
+    m_mainLayer->addChildAtPosition(globalLabel, Anchor::Center, ccp(0.f, 61.f));
 
     auto categoryText = fmt::format(
         "{}: #{}",
@@ -27,16 +27,24 @@ bool DemonDetailPopup::init(
     );
     auto categoryLabel = CCLabelBMFont::create(categoryText.c_str(), "goldFont.fnt");
     categoryLabel->setScale(.40f);
-    m_mainLayer->addChildAtPosition(categoryLabel, Anchor::Center, ccp(0.f, 34.f));
+    m_mainLayer->addChildAtPosition(categoryLabel, Anchor::Center, ccp(0.f, 38.f));
 
-    char const* sourceText = demon->officialLevelID > 0
-        ? "Nivel oficial de Geometry Dash"
-        : "Nivel online - se abrira la busqueda por nombre";
+    auto creatorText = demon->creator.empty()
+        ? std::string("Creador: ---")
+        : fmt::format("Creador: {}", demon->creator);
+    auto creatorLabel = CCLabelBMFont::create(creatorText.c_str(), "goldFont.fnt");
+    creatorLabel->setScale(.34f);
+    creatorLabel->limitLabelWidth(320.f, .34f, .22f);
+    creatorLabel->setOpacity(200);
+    m_mainLayer->addChildAtPosition(creatorLabel, Anchor::Center, ccp(0.f, 13.f));
 
-    auto sourceLabel = CCLabelBMFont::create(sourceText, "goldFont.fnt");
-    sourceLabel->setScale(.34f);
-    sourceLabel->setOpacity(190);
-    m_mainLayer->addChildAtPosition(sourceLabel, Anchor::Center, ccp(0.f, 4.f));
+    auto scoreText = demon->personalScore >= 0.0
+        ? fmt::format("Difficulty Score: {:.1f}", demon->personalScore)
+        : std::string("Difficulty Score: importado");
+    auto scoreLabel = CCLabelBMFont::create(scoreText.c_str(), "goldFont.fnt");
+    scoreLabel->setScale(.34f);
+    scoreLabel->setOpacity(190);
+    m_mainLayer->addChildAtPosition(scoreLabel, Anchor::Center, ccp(0.f, -9.f));
 
     if (demon->officialLevelID > 0) {
         auto viewSprite = ButtonSprite::create(
@@ -52,7 +60,7 @@ bool DemonDetailPopup::init(
             this,
             menu_selector(DemonDetailPopup::onOpenLevel)
         );
-        m_buttonMenu->addChildAtPosition(viewButton, Anchor::Center, ccp(-72.f, -48.f));
+        m_buttonMenu->addChildAtPosition(viewButton, Anchor::Center, ccp(-72.f, -55.f));
 
         auto playSprite = ButtonSprite::create(
             "JUGAR",
@@ -67,11 +75,12 @@ bool DemonDetailPopup::init(
             this,
             menu_selector(DemonDetailPopup::onPlayOfficial)
         );
-        m_buttonMenu->addChildAtPosition(playButton, Anchor::Center, ccp(72.f, -48.f));
+        m_buttonMenu->addChildAtPosition(playButton, Anchor::Center, ccp(72.f, -55.f));
     }
     else {
+        auto caption = demon->levelID > 0 ? "ABRIR NIVEL" : "BUSCAR / JUGAR";
         auto openSprite = ButtonSprite::create(
-            "BUSCAR / JUGAR",
+            caption,
             "bigFont.fnt",
             "GJ_button_01.png",
             .8f
@@ -83,7 +92,7 @@ bool DemonDetailPopup::init(
             this,
             menu_selector(DemonDetailPopup::onOpenLevel)
         );
-        m_buttonMenu->addChildAtPosition(openButton, Anchor::Center, ccp(0.f, -48.f));
+        m_buttonMenu->addChildAtPosition(openButton, Anchor::Center, ccp(0.f, -55.f));
     }
 
     return true;
@@ -114,10 +123,11 @@ void DemonDetailPopup::onOpenLevel(CCObject*) {
         return;
     }
 
-    auto search = GJSearchObject::create(
-        SearchType::Search,
-        m_demon->name.c_str()
-    );
+    auto query = m_demon->levelID > 0
+        ? fmt::format("{}", m_demon->levelID)
+        : m_demon->name;
+
+    auto search = GJSearchObject::create(SearchType::Search, query.c_str());
     auto scene = LevelBrowserLayer::scene(search);
     CCDirector::sharedDirector()->replaceScene(
         CCTransitionFade::create(.5f, scene)

@@ -7,13 +7,21 @@ bool DemonTrackerPopup::init() {
         return false;
     }
 
+    initializeDemonData();
     this->setTitle("Demon Tracker");
 
-    auto hardestLabel = CCLabelBMFont::create("Hardest: Deadlocked", "bigFont.fnt");
+    auto const& demons = getDemonEntries();
+    auto hardestText = demons.empty()
+        ? std::string("Hardest: ---")
+        : fmt::format("Hardest: {}", demons.front().name);
+
+    auto hardestLabel = CCLabelBMFont::create(hardestText.c_str(), "bigFont.fnt");
     hardestLabel->setScale(.55f);
+    hardestLabel->limitLabelWidth(330.f, .55f, .30f);
     m_mainLayer->addChildAtPosition(hardestLabel, Anchor::Center, ccp(0.f, 68.f));
 
-    auto countLabel = CCLabelBMFont::create("Demons registrados: 25", "goldFont.fnt");
+    auto countText = fmt::format("Demons registrados: {}", demons.size());
+    auto countLabel = CCLabelBMFont::create(countText.c_str(), "goldFont.fnt");
     countLabel->setScale(.48f);
     m_mainLayer->addChildAtPosition(countLabel, Anchor::Center, ccp(0.f, 45.f));
 
@@ -24,7 +32,7 @@ bool DemonTrackerPopup::init() {
     this->createCategoryButton("INSANE", 4, ccp(-55.f, -65.f));
     this->createCategoryButton("EXTREME", 5, ccp(55.f, -65.f));
 
-    auto footer = CCLabelBMFont::create("v0.1.2 - niveles interactivos", "goldFont.fnt");
+    auto footer = CCLabelBMFont::create("v0.2.0 - ranking automatico", "goldFont.fnt");
     footer->setScale(.32f);
     footer->setOpacity(150);
     m_mainLayer->addChildAtPosition(footer, Anchor::Bottom, ccp(0.f, 12.f));
