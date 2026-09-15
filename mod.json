@@ -6,11 +6,11 @@
   },
   "id": "chigui.demon-tracker",
   "name": "Demon Tracker",
-  "version": "v1.0.0",
+  "version": "v1.0.1",
   "developer": "Chigui-07",
   "description": "Build a permanent personal ranking of the demons you complete.",
   "links": {
-    "source": "https://github.com/Chigui-07/Chigui-GD-Mods/tree/mod/demon-tracker"
+    "source": "https://github.com/Chigui-07/Chigui-GD-Mods/tree/main"
   },
   "issues": {
     "info": "Report bugs or suggestions on GitHub.",
