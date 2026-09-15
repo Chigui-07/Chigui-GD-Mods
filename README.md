@@ -1,122 +1,47 @@
 # Chigui GD Mods
 
-Repositorio para crear, experimentar y mantener mods de **Geometry Dash** usando **Geode**.
+Repositorio de mods de **Geometry Dash** creados con **Geode**.
 
-El `README.md` funciona también como **bitácora principal del proyecto**: aquí se registran los mods planeados, su estado, las decisiones importantes y los avances realizados.
+## Demon Tracker
 
-## Mods
+**Version actual:** v1.0.0  
+**Estado:** candidato de lanzamiento publico  
+**Plataformas:** Windows y Android
 
-### 1. Demon Tracker
+Demon Tracker crea una clasificacion personal de demons basada en como se sintio cada nivel para el jugador al momento de completarlo.
 
-**Estado:** Interfaz v0.1 implementada  
-**Prioridad:** Principal
+### Funciones principales
 
-Objetivo: crear un sistema personal de clasificación de demons basado en la experiencia real del jugador al completar cada nivel.
+- Detecta nuevos demons completados.
+- Exige 100% y, cuando existen, todas las monedas verificadas.
+- Muestra un cuestionario de seis factores despues de una completion valida.
+- Calcula un Difficulty Score personal de 0 a 100.
+- Inserta automaticamente el nivel en un ranking global permanente.
+- Mantiene listas separadas para Easy, Medium, Hard, Insane y Extreme Demon.
+- Guarda la informacion localmente con el sistema de saved data de Geode.
+- Registra rebats sin volver a clasificar el nivel.
+- Muestra Level ID, creador, intentos, rebats y score cuando estan disponibles.
+- Permite abrir los niveles desde la propia lista.
+- Usa las caras de dificultad y elementos visuales nativos de Geometry Dash.
 
-Funciones planeadas:
-
-- Detectar demons completados.
-- Mostrar un cuestionario de dificultad después de completar un demon.
-- Calcular una puntuación personal de dificultad.
-- Insertar automáticamente el demon en una clasificación permanente.
-- Mantener listas separadas para:
-  - Easy Demon
-  - Medium Demon
-  - Hard Demon
-  - Insane Demon
-  - Extreme Demon
-- Mantener una lista general con todos los demons mezclados.
-- Mostrar el hardest personal y el hardest de cada categoría.
-- Guardar estadísticas de cada completion.
-- Soporte inicial planeado para Windows y Android.
-
-#### Cuestionario v1
-
-Cada apartado se califica del 1 al 10:
+### Cuestionario
 
 | Factor | Peso |
 | --- | ---: |
 | Dificultad general | 30% |
 | Consistencia | 20% |
-| Precisión | 15% |
-| Control de modos de juego | 15% |
+| Precision | 15% |
+| Control | 15% |
 | Aprendizaje | 10% |
-| Presión / nervios | 10% |
+| Presion | 10% |
 
-La puntuación final se convierte a una escala de 0 a 100.
+Una vez confirmado el cuestionario, la relacion del demon con los niveles ya registrados no se modifica. Nuevos demons pueden insertarse por encima, debajo o entre ellos.
 
-La clasificación será **permanente**: una vez confirmado el cuestionario, el orden relativo del nivel respecto a los demons ya registrados no podrá modificarse. Los futuros demons podrán insertarse por encima, debajo o entre ellos.
+## Otros mods planeados
 
-Antes del cuestionario se mostrará una advertencia indicando que la clasificación será permanente, sin revelar previamente en qué posición quedará el nivel.
+- **Random 100:** reto de 100 Easy Demons aleatorios sin skips.
+- **Level Roulette:** ruleta de niveles con filtros y modos de reto.
 
-Estadísticas adicionales planeadas que no afectarán directamente la puntuación:
+## Desarrollo
 
-- Intentos.
-- Intentos en práctica.
-- Tiempo de juego.
-- Fecha de completado.
-- Monedas.
-- Primer completion o rebeat.
-- Dificultad oficial.
-- ID del nivel.
-- Creador.
-- Modo o tipo de sección que más costó.
-
----
-
-### 2. Random 100
-
-**Estado:** Planeado
-
-Reto de 100 Easy Demons completamente aleatorios.
-
-Reglas base:
-
-- No se puede saltar ningún nivel.
-- No se puede avanzar hasta completar el nivel actual.
-- Si ya estaba completado, será obligatorio hacer rebeat.
-- Si el nivel tiene monedas, deberán conseguirse según la regla personal del reto.
-- Integración futura con Demon Tracker para clasificar automáticamente cada nuevo completion.
-
----
-
-### 3. Level Roulette
-
-**Estado:** Planeado
-
-Ruleta aleatoria para niveles normales de Geometry Dash, con filtros y posibles modos de reto.
-
----
-
-## Bitácora
-
-### 13/09/2026
-
-- Repositorio creado: `Chigui-GD-Mods`.
-- Se decidió usar este README como bitácora central de todos los mods.
-- Se eligió **Demon Tracker** como primer proyecto.
-- Se definió el sistema inicial de clasificación personal.
-- Se definieron seis factores para el cuestionario de dificultad y sus pesos.
-- Se decidió que la clasificación será permanente una vez confirmada.
-- Se planificaron listas separadas por dificultad y una lista general.
-- Se dejó **Random 100** como segundo proyecto principal.
-- Se dejó **Level Roulette** como proyecto futuro.
-- Creada la rama `mod/demon-tracker` para desarrollar el primer mod sin mezclarlo con `main`.
-- Creada la estructura base de Geode para **Demon Tracker v0.1.0**.
-- Añadidos `mod.json`, `CMakeLists.txt`, `src/main.cpp`, `about.md`, `changelog.md` y `.gitignore`.
-- Añadido un botón de prueba en el menú principal para comprobar que el mod carga correctamente.
-- Añadida compilación automática para Windows, Android 32-bit y Android 64-bit mediante GitHub Actions.
-- Corregido el formato de versión de Geode en `mod.json`.
-- Primera compilación multiplataforma completada correctamente.
-- **Primera prueba real en Android completada con éxito:** Geode carga Demon Tracker y el botón de prueba funciona dentro de Geometry Dash.
-- Creada la primera interfaz propia de **Demon Tracker** usando el sistema `Popup` de Geode.
-- Añadidos botones para `ALL`, `EASY`, `MEDIUM`, `HARD`, `INSANE` y `EXTREME`.
-- Añadidos los indicadores iniciales `Hardest: ---` y `Demons registrados: 0`.
-- Separada la interfaz en `src/ui/DemonTrackerPopup.hpp` y `src/ui/DemonTrackerPopup.cpp` para mantener el proyecto ordenado.
-
-## Plataformas objetivo
-
-- Windows
-- Android
-
-Otras plataformas podrán estudiarse más adelante.
+La rama `mod/demon-tracker` contiene el codigo de Demon Tracker. Las compilaciones multiplataforma se generan automaticamente con GitHub Actions.

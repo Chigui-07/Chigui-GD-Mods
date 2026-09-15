@@ -1,14 +1,22 @@
 # Changelog
 
-## v0.3.1 - En desarrollo
+## v1.0.0
 
-- Sustituidos los botones planos de dificultad por las caras nativas de Easy, Medium, Hard, Insane y Extreme Demon.
-- Redisenada la lista de niveles para parecerse mas a una lista de Geometry Dash: icono de dificultad, ranking, nombre, score y flecha de acceso.
-- Toda la fila del demon ahora funciona como acceso a su ficha; ya no depende de un boton VER separado.
-- Redisenada la ficha individual para eliminar los grandes bloques de color y usar un unico panel mas limpio.
-- Anadida la cara de la dificultad en la ficha del demon.
-- Los botones de INFO y JUGAR usan iconos nativos de Geometry Dash.
-- Los demons importados muestran `Importado` en vez de `BASE`.
+- Primera version preparada para publicacion.
+- Los usuarios nuevos comienzan con una lista vacia; se elimino la lista personal usada durante las pruebas de desarrollo.
+- Se mantiene intacta la informacion ya guardada por usuarios que actualizaron desde builds de prueba.
+- Interfaz principal refinada con tarjetas de categoria, caras de Demon y contadores por dificultad.
+- Listas refinadas con filas estilo Geometry Dash, rango, cara de dificultad, creador y Difficulty Score.
+- Ficha individual refinada con ranking global, ranking por categoria, score, creador, ID, intentos y rebats.
+- Cuestionario visualmente integrado con el estilo del juego y la cara de dificultad del nivel.
+- Anadidos metadatos publicos, enlace al codigo fuente, reporte de problemas y tags para Geode.
+- Anadido logo propio de Demon Tracker.
+
+## v0.3.1
+
+- Anadidas las caras oficiales de Demon a los selectores de dificultad.
+- Las listas muestran la cara correspondiente a cada nivel y toda la fila funciona como boton.
+- Rehecha la ficha del Demon para reducir paneles planos y usar botones visuales de Geometry Dash.
 
 ## v0.3.0
 
@@ -30,7 +38,6 @@
 - Los nuevos demons se insertan en el ranking sin alterar el orden relativo de los demons ya clasificados.
 - Anadido desempate por las seis respuestas; un empate total queda debajo del demon ya registrado.
 - Las fichas muestran creador, Difficulty Score y usan el Level ID cuando ya esta disponible.
-- Anadida migracion temporal de la clasificacion inicial de 25 demons para conservar la lista del tester durante el desarrollo.
 
 ## v0.1.2
 
@@ -42,9 +49,7 @@
 
 - Anadida navegacion real desde la interfaz principal hacia las listas por categoria.
 - Anadida lista desplazable para mostrar demons registrados.
-- Cargada la clasificacion inicial de 25 demons del jugador.
-- `Easy Demons` y `All Demons` muestran la clasificacion completa actual.
-- Las categorias Medium, Hard, Insane y Extreme muestran un estado vacio hasta que existan demons registrados.
+- Cargada la clasificacion inicial de 25 demons del jugador para las pruebas de desarrollo.
 - El panel principal muestra el hardest y el total de demons registrados.
 
 ## v0.1.0

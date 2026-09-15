@@ -58,69 +58,6 @@ namespace {
         }
         return false;
     }
-
-    std::vector<DemonEntry> makeLegacyEntries() {
-        struct Seed {
-            char const* name;
-            int officialID;
-        };
-
-        static constexpr Seed seeds[] = {
-            {"Deadlocked", 20},
-            {"Retro Circles", 0},
-            {"Glorious Fortress", 0},
-            {"Beautiful and Damned", 0},
-            {"Clubstep", 14},
-            {"WEIRD", 0},
-            {"Otis", 0},
-            {"Insomnia", 0},
-            {"ISpyWithMyLittleEye", 0},
-            {"Sky High", 0},
-            {"V01D", 0},
-            {"Blindfolder", 0},
-            {"Pjork", 0},
-            {"Shiver", 0},
-            {"Xstep V2", 0},
-            {"Blue Hell", 0},
-            {"Crescendo", 0},
-            {"What is it", 0},
-            {"Lights and Thunder", 0},
-            {"Platinum Adventure", 0},
-            {"Ruins of Destiny", 0},
-            {"ABCDEFGHIJKLMNOPQRS", 0},
-            {"Demon Mixed", 0},
-            {"The Nightmare", 0},
-            {"The Lightning Road", 0}
-        };
-
-        std::vector<DemonEntry> result;
-        result.reserve(std::size(seeds));
-
-        for (size_t i = 0; i < std::size(seeds); ++i) {
-            auto const& seed = seeds[i];
-            auto official = seed.officialID > 0;
-            auto anchor = 80.0 - static_cast<double>(i) * 2.5;
-
-            result.push_back(DemonEntry {
-                .key = official
-                    ? fmt::format("main:{}", seed.officialID)
-                    : "legacy:" + normalizeName(seed.name),
-                .name = seed.name,
-                .creator = official ? "RobTop" : "",
-                .category = DemonCategory::Easy,
-                .levelID = seed.officialID,
-                .officialLevelID = seed.officialID,
-                .anchorScore = anchor,
-                .personalScore = -1.0,
-                .answers = {0, 0, 0, 0, 0, 0},
-                .imported = true,
-                .attempts = 0,
-                .rebeats = 0
-            });
-        }
-
-        return result;
-    }
 }
 
 void initializeDemonData() {
@@ -133,15 +70,6 @@ void initializeDemonData() {
         "demon-entries-v2",
         {}
     );
-
-    // Temporary migration for the development tester. This block will be
-    // removed before the public v1.0 release so new users start with their
-    // own empty Demon Tracker.
-    if (s_entries.empty() && !Mod::get()->getSavedValue<bool>("legacy-seed-v020", false)) {
-        s_entries = makeLegacyEntries();
-        Mod::get()->setSavedValue("legacy-seed-v020", true);
-        saveDemonData();
-    }
 }
 
 void saveDemonData() {
@@ -333,7 +261,6 @@ int registerRatedDemon(
                 insertAt = i;
                 break;
             }
-            // Exact ties are deliberately inserted below the existing demon.
         }
     }
 

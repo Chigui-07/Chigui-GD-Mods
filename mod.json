@@ -6,9 +6,21 @@
   },
   "id": "chigui.demon-tracker",
   "name": "Demon Tracker",
-  "version": "v0.3.1",
+  "version": "v1.0.0",
   "developer": "Chigui-07",
-  "description": "A personal Geometry Dash demon tracker with permanent difficulty rankings.",
+  "description": "Build a permanent personal ranking of the demons you complete.",
+  "links": {
+    "source": "https://github.com/Chigui-07/Chigui-GD-Mods/tree/mod/demon-tracker"
+  },
+  "issues": {
+    "info": "Report bugs or suggestions on GitHub.",
+    "url": "https://github.com/Chigui-07/Chigui-GD-Mods/issues"
+  },
+  "tags": [
+    "utility",
+    "interface",
+    "enhancement"
+  ],
   "dependencies": {
     "geode.node-ids": ">=v1.23.3"
   }

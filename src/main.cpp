@@ -13,7 +13,7 @@ class $modify(DemonTrackerMenuLayer, MenuLayer) {
         }
 
         initializeDemonData();
-        log::info("Demon Tracker v0.2.0 loaded successfully.");
+        log::info("Demon Tracker v1.0.0 loaded successfully.");
 
         auto button = CCMenuItemSpriteExtra::create(
             CCSprite::createWithSpriteFrameName("GJ_likeBtn_001.png"),

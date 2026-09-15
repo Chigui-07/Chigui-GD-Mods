@@ -4,7 +4,7 @@
 #include <Geode/ui/ScrollLayer.hpp>
 
 bool DemonListPopup::init(DemonCategory category) {
-    if (!Popup::init(440.f, 292.f)) {
+    if (!Popup::init(448.f, 300.f)) {
         return false;
     }
 
@@ -14,36 +14,34 @@ bool DemonListPopup::init(DemonCategory category) {
 
     auto countText = fmt::format("{} registrados", m_demons.size());
     auto countLabel = CCLabelBMFont::create(countText.c_str(), "goldFont.fnt");
-    countLabel->setScale(.35f);
-    countLabel->setOpacity(210);
-    m_mainLayer->addChildAtPosition(countLabel, Anchor::Center, ccp(0.f, 101.f));
+    countLabel->setScale(.34f);
+    countLabel->setOpacity(205);
+    m_mainLayer->addChildAtPosition(countLabel, Anchor::Center, ccp(0.f, 108.f));
 
-    auto hintLabel = CCLabelBMFont::create("Toca cualquier nivel para abrir su ficha", "goldFont.fnt");
-    hintLabel->setScale(.24f);
-    hintLabel->setOpacity(140);
-    m_mainLayer->addChildAtPosition(hintLabel, Anchor::Center, ccp(0.f, 84.f));
+    auto listBackdrop = demonui::panel({390.f, 214.f}, ccc3(70, 37, 27), 220);
+    m_mainLayer->addChildAtPosition(listBackdrop, Anchor::Center, ccp(0.f, -18.f));
 
-    auto list = ScrollLayer::create({378.f, 201.f});
-    list->m_contentLayer->setLayout(ScrollLayer::createDefaultListLayout(5.f));
+    auto list = ScrollLayer::create({382.f, 206.f});
+    list->m_contentLayer->setLayout(ScrollLayer::createDefaultListLayout(3.f));
     list->setTouchEnabled(true);
     list->setStealingTouches(true);
 
     if (m_demons.empty()) {
         auto emptyRow = CCNode::create();
-        emptyRow->setContentSize({364.f, 74.f});
+        emptyRow->setContentSize({370.f, 76.f});
 
-        auto bg = demonui::panel({352.f, 62.f}, ccc3(91, 48, 31), 225);
-        bg->setPosition({182.f, 37.f});
+        auto bg = demonui::panel({358.f, 64.f}, ccc3(102, 58, 37), 235);
+        bg->setPosition({185.f, 38.f});
         emptyRow->addChild(bg);
 
         auto emptyLabel = CCLabelBMFont::create(
             "Todavia no hay demons en esta categoria.",
             "goldFont.fnt"
         );
-        emptyLabel->setScale(.33f);
+        emptyLabel->setScale(.32f);
         emptyLabel->setOpacity(205);
-        emptyLabel->limitLabelWidth(290.f, .33f, .23f);
-        emptyLabel->setPosition({182.f, 37.f});
+        emptyLabel->limitLabelWidth(295.f, .32f, .22f);
+        emptyLabel->setPosition({185.f, 38.f});
         emptyRow->addChild(emptyLabel);
         list->m_contentLayer->addChild(emptyRow);
     }
@@ -54,7 +52,7 @@ bool DemonListPopup::init(DemonCategory category) {
                     static_cast<int>(i) + 1,
                     static_cast<int>(i),
                     *m_demons[i],
-                    364.f
+                    370.f
                 )
             );
         }
@@ -80,58 +78,72 @@ CCNode* DemonListPopup::createDemonRow(
     float width
 ) {
     auto row = CCMenu::create();
-    row->setContentSize({width, 52.f});
+    row->setContentSize({width, 48.f});
     row->setAnchorPoint({0.f, 0.f});
     row->setPosition({0.f, 0.f});
 
     auto content = CCNode::create();
-    content->setContentSize({width, 50.f});
+    content->setContentSize({width, 46.f});
     content->setAnchorPoint({.5f, .5f});
     content->ignoreAnchorPointForPosition(false);
 
-    auto bg = demonui::panel({width - 6.f, 47.f}, ccc3(91, 48, 31), 235);
-    bg->setPosition({width / 2.f, 25.f});
+    auto bg = demonui::panel({width - 6.f, 44.f}, ccc3(103, 58, 37), 242);
+    bg->setPosition({width / 2.f, 23.f});
     content->addChild(bg);
 
-    if (auto icon = demonui::difficultyIcon(demon.category, .29f)) {
-        icon->setPosition({30.f, 25.f});
-        content->addChild(icon);
-    }
+    auto rankBg = demonui::panel({43.f, 34.f}, ccc3(66, 36, 27), 245);
+    rankBg->setPosition({32.f, 23.f});
+    content->addChild(rankBg);
 
     auto rankText = fmt::format("#{}", rank);
     auto rankLabel = CCLabelBMFont::create(rankText.c_str(), "bigFont.fnt");
-    rankLabel->setScale(.34f);
-    rankLabel->setPosition({67.f, 25.f});
+    rankLabel->setScale(.31f);
+    rankLabel->setPosition({32.f, 23.f});
     content->addChild(rankLabel);
 
+    if (auto icon = demonui::difficultyIcon(demon.category, .25f)) {
+        icon->setPosition({76.f, 23.f});
+        content->addChild(icon);
+    }
+
     auto nameLabel = CCLabelBMFont::create(demon.name.c_str(), "bigFont.fnt");
-    nameLabel->setScale(.36f);
+    nameLabel->setScale(.34f);
     nameLabel->setAnchorPoint({0.f, .5f});
-    nameLabel->setPosition({94.f, 31.f});
-    nameLabel->limitLabelWidth(175.f, .36f, .23f);
+    nameLabel->setPosition({101.f, 29.f});
+    nameLabel->limitLabelWidth(168.f, .34f, .22f);
     content->addChild(nameLabel);
 
-    auto categoryLabel = CCLabelBMFont::create(demonui::categoryName(demon.category), "goldFont.fnt");
-    categoryLabel->setScale(.20f);
-    categoryLabel->setOpacity(175);
-    categoryLabel->setAnchorPoint({0.f, .5f});
-    categoryLabel->setPosition({94.f, 14.f});
-    content->addChild(categoryLabel);
+    auto subText = demon.creator.empty()
+        ? std::string(demonui::categoryName(demon.category))
+        : fmt::format("{}  -  {}", demonui::categoryName(demon.category), demon.creator);
+    auto subLabel = CCLabelBMFont::create(subText.c_str(), "goldFont.fnt");
+    subLabel->setScale(.18f);
+    subLabel->setOpacity(170);
+    subLabel->setAnchorPoint({0.f, .5f});
+    subLabel->setPosition({101.f, 12.f});
+    subLabel->limitLabelWidth(190.f, .18f, .14f);
+    content->addChild(subLabel);
+
+    auto scoreTitle = CCLabelBMFont::create("SCORE", "goldFont.fnt");
+    scoreTitle->setScale(.16f);
+    scoreTitle->setOpacity(135);
+    scoreTitle->setPosition({300.f, 31.f});
+    content->addChild(scoreTitle);
 
     auto scoreText = demon.personalScore >= 0.0
-        ? fmt::format("Score {:.1f}", demon.personalScore)
-        : std::string("Importado");
+        ? fmt::format("{:.1f}", demon.personalScore)
+        : std::string("BASE");
     auto scoreLabel = CCLabelBMFont::create(scoreText.c_str(), "goldFont.fnt");
-    scoreLabel->setScale(.22f);
-    scoreLabel->setOpacity(200);
-    scoreLabel->setPosition({287.f, 25.f});
+    scoreLabel->setScale(.24f);
+    scoreLabel->setOpacity(215);
+    scoreLabel->setPosition({300.f, 16.f});
     content->addChild(scoreLabel);
 
     auto arrow = CCSprite::createWithSpriteFrameName("GJ_arrow_01_001.png");
     if (arrow) {
         arrow->setFlipX(true);
-        arrow->setScale(.34f);
-        arrow->setPosition({339.f, 25.f});
+        arrow->setScale(.32f);
+        arrow->setPosition({346.f, 23.f});
         content->addChild(arrow);
     }
 
@@ -141,7 +153,7 @@ CCNode* DemonListPopup::createDemonRow(
         menu_selector(DemonListPopup::onDemonSelected)
     );
     button->setTag(index);
-    button->setPosition({width / 2.f, 26.f});
+    button->setPosition({width / 2.f, 24.f});
     row->addChild(button);
 
     return row;
