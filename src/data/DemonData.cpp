@@ -9,7 +9,20 @@ using namespace geode::prelude;
 namespace {
     std::vector<DemonEntry> s_entries;
     bool s_loaded = false;
+    std::string s_activeProfileKey;
     std::optional<PendingDemonCompletion> s_pendingCompletion;
+
+    std::string currentProfileKey() {
+        auto accountManager = GJAccountManager::sharedState();
+        if (accountManager && accountManager->m_accountID > 0) {
+            return fmt::format("account-{}", accountManager->m_accountID);
+        }
+        return "local";
+    }
+
+    std::string entriesStorageKey(std::string const& profileKey) {
+        return "demon-entries-v3-" + profileKey;
+    }
 
     std::string normalizeName(std::string value) {
         std::string result;
@@ -61,19 +74,23 @@ namespace {
 }
 
 void initializeDemonData() {
-    if (s_loaded) {
+    auto profileKey = currentProfileKey();
+    if (s_loaded && s_activeProfileKey == profileKey) {
         return;
     }
 
     s_loaded = true;
+    s_activeProfileKey = profileKey;
+    s_pendingCompletion.reset();
     s_entries = Mod::get()->getSavedValue<std::vector<DemonEntry>>(
-        "demon-entries-v2",
+        entriesStorageKey(profileKey),
         {}
     );
 }
 
 void saveDemonData() {
-    Mod::get()->setSavedValue("demon-entries-v2", s_entries);
+    initializeDemonData();
+    Mod::get()->setSavedValue(entriesStorageKey(s_activeProfileKey), s_entries);
 }
 
 std::vector<DemonEntry> const& getDemonEntries() {
@@ -270,10 +287,12 @@ int registerRatedDemon(
 }
 
 void setPendingDemonCompletion(PendingDemonCompletion const& completion) {
+    initializeDemonData();
     s_pendingCompletion = completion;
 }
 
 std::optional<PendingDemonCompletion> takePendingDemonCompletion() {
+    initializeDemonData();
     auto result = s_pendingCompletion;
     s_pendingCompletion.reset();
     return result;

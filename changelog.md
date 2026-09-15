@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.0.1
+
+- El ranking ahora se guarda por cuenta de Geometry Dash usando el Account ID.
+- Cambiar de cuenta ya no arrastra la lista de demons de otra cuenta.
+- Los datos compartidos de las builds de desarrollo anteriores dejan de cargarse en la version publica.
+- Si se cambia de cuenta sin cerrar el juego, Demon Tracker recarga automaticamente la lista correspondiente.
+- Actualizado el enlace de codigo fuente para apuntar a la rama estable `main`.
+
 ## v1.0.0
 
 - Primera version preparada para publicacion.
