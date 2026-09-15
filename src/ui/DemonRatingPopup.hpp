@@ -17,9 +17,9 @@ protected:
     CCLabelBMFont* m_valueLabel = nullptr;
     CCLabelBMFont* m_pageLabel = nullptr;
 
-    CCLayerColor* m_questionPanel = nullptr;
-    CCLayerColor* m_valuePanel = nullptr;
-    CCLayerColor* m_progressTrack = nullptr;
+    cocos2d::extension::CCScale9Sprite* m_questionPanel = nullptr;
+    cocos2d::extension::CCScale9Sprite* m_valuePanel = nullptr;
+    cocos2d::extension::CCScale9Sprite* m_progressTrack = nullptr;
     CCLayerColor* m_progressFill = nullptr;
 
     CCMenuItemSpriteExtra* m_continueButton = nullptr;
