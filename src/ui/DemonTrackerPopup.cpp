@@ -1,29 +1,10 @@
 #include "DemonTrackerPopup.hpp"
 #include "DemonListPopup.hpp"
+#include "DemonUI.hpp"
 #include "../data/DemonData.hpp"
 
-namespace {
-    CCLayerColor* makePanel(CCSize const& size, ccColor4B const& color) {
-        auto panel = CCLayerColor::create(color, size.width, size.height);
-        panel->ignoreAnchorPointForPosition(false);
-        panel->setAnchorPoint({.5f, .5f});
-        return panel;
-    }
-
-    char const* categoryButtonTexture(int tag) {
-        switch (tag) {
-            case 1: return "GJ_button_01.png"; // Easy
-            case 2: return "GJ_button_06.png"; // Medium
-            case 3: return "GJ_button_06.png"; // Hard
-            case 4: return "GJ_button_05.png"; // Insane
-            case 5: return "GJ_button_02.png"; // Extreme
-            default: return "GJ_button_04.png"; // All
-        }
-    }
-}
-
 bool DemonTrackerPopup::init() {
-    if (!Popup::init(440.f, 275.f)) {
+    if (!Popup::init(440.f, 285.f)) {
         return false;
     }
 
@@ -32,40 +13,51 @@ bool DemonTrackerPopup::init() {
 
     auto const& demons = getDemonEntries();
 
-    auto heroPanel = makePanel({370.f, 62.f}, ccc4(24, 44, 72, 115));
-    m_mainLayer->addChildAtPosition(heroPanel, Anchor::Center, ccp(0.f, 56.f));
+    auto heroPanel = demonui::panel({365.f, 64.f}, ccc3(91, 48, 31), 235);
+    m_mainLayer->addChildAtPosition(heroPanel, Anchor::Center, ccp(0.f, 61.f));
+
+    if (!demons.empty()) {
+        if (auto icon = demonui::difficultyIcon(demons.front().category, .42f)) {
+            m_mainLayer->addChildAtPosition(icon, Anchor::Center, ccp(-147.f, 61.f));
+        }
+    }
 
     auto hardestText = demons.empty()
         ? std::string("Hardest: ---")
         : fmt::format("Hardest: {}", demons.front().name);
 
     auto hardestLabel = CCLabelBMFont::create(hardestText.c_str(), "bigFont.fnt");
-    hardestLabel->setScale(.54f);
-    hardestLabel->limitLabelWidth(330.f, .54f, .30f);
-    m_mainLayer->addChildAtPosition(hardestLabel, Anchor::Center, ccp(0.f, 67.f));
+    hardestLabel->setScale(.49f);
+    hardestLabel->limitLabelWidth(285.f, .49f, .28f);
+    m_mainLayer->addChildAtPosition(hardestLabel, Anchor::Center, ccp(15.f, 69.f));
 
     auto countText = fmt::format("{} demons registrados", demons.size());
     auto countLabel = CCLabelBMFont::create(countText.c_str(), "goldFont.fnt");
-    countLabel->setScale(.39f);
+    countLabel->setScale(.35f);
     countLabel->setOpacity(220);
-    m_mainLayer->addChildAtPosition(countLabel, Anchor::Center, ccp(0.f, 43.f));
+    m_mainLayer->addChildAtPosition(countLabel, Anchor::Center, ccp(15.f, 47.f));
 
     auto sectionLabel = CCLabelBMFont::create("LISTAS DE DEMONS", "goldFont.fnt");
     sectionLabel->setScale(.30f);
-    sectionLabel->setOpacity(180);
-    m_mainLayer->addChildAtPosition(sectionLabel, Anchor::Center, ccp(0.f, 15.f));
+    sectionLabel->setOpacity(185);
+    m_mainLayer->addChildAtPosition(sectionLabel, Anchor::Center, ccp(0.f, 18.f));
 
-    this->createCategoryButton("ALL", 0, ccp(-120.f, -11.f));
-    this->createCategoryButton("EASY", 1, ccp(0.f, -11.f));
-    this->createCategoryButton("MEDIUM", 2, ccp(120.f, -11.f));
-    this->createCategoryButton("HARD", 3, ccp(-120.f, -50.f));
-    this->createCategoryButton("INSANE", 4, ccp(0.f, -50.f));
-    this->createCategoryButton("EXTREME", 5, ccp(120.f, -50.f));
+    this->createCategoryButton("ALL", 0, ccp(-150.f, -25.f));
+    this->createCategoryButton("EASY", 1, ccp(-88.f, -25.f));
+    this->createCategoryButton("MEDIUM", 2, ccp(-29.f, -25.f));
+    this->createCategoryButton("HARD", 3, ccp(30.f, -25.f));
+    this->createCategoryButton("INSANE", 4, ccp(89.f, -25.f));
+    this->createCategoryButton("EXTREME", 5, ccp(150.f, -25.f));
 
-    auto footer = CCLabelBMFont::create("v0.3.0 - visual refresh", "goldFont.fnt");
-    footer->setScale(.28f);
-    footer->setOpacity(130);
-    m_mainLayer->addChildAtPosition(footer, Anchor::Bottom, ccp(0.f, 10.f));
+    auto hint = CCLabelBMFont::create("Toca una dificultad para abrir su ranking", "goldFont.fnt");
+    hint->setScale(.24f);
+    hint->setOpacity(135);
+    m_mainLayer->addChildAtPosition(hint, Anchor::Center, ccp(0.f, -76.f));
+
+    auto footer = CCLabelBMFont::create("v0.3.1 - GD style pass", "goldFont.fnt");
+    footer->setScale(.26f);
+    footer->setOpacity(115);
+    m_mainLayer->addChildAtPosition(footer, Anchor::Bottom, ccp(0.f, 9.f));
 
     return true;
 }
@@ -75,22 +67,53 @@ CCMenuItemSpriteExtra* DemonTrackerPopup::createCategoryButton(
     int tag,
     CCPoint const& offset
 ) {
-    auto sprite = ButtonSprite::create(
-        text,
-        "bigFont.fnt",
-        categoryButtonTexture(tag),
-        .8f
-    );
-    sprite->setScale(.54f);
+    CCNode* visual = nullptr;
+
+    if (tag == 0) {
+        auto allSprite = ButtonSprite::create(
+            "ALL",
+            "bigFont.fnt",
+            "GJ_button_04.png",
+            .8f
+        );
+        allSprite->setScale(.42f);
+        visual = allSprite;
+    }
+    else {
+        auto holder = CCNode::create();
+        holder->setContentSize({54.f, 64.f});
+        holder->setAnchorPoint({.5f, .5f});
+        holder->ignoreAnchorPointForPosition(false);
+
+        auto category = DemonCategory::Easy;
+        switch (tag) {
+            case 2: category = DemonCategory::Medium; break;
+            case 3: category = DemonCategory::Hard; break;
+            case 4: category = DemonCategory::Insane; break;
+            case 5: category = DemonCategory::Extreme; break;
+            default: category = DemonCategory::Easy; break;
+        }
+
+        if (auto icon = demonui::difficultyIcon(category, .38f)) {
+            icon->setPosition({27.f, 39.f});
+            holder->addChild(icon);
+        }
+
+        auto label = CCLabelBMFont::create(text, "bigFont.fnt");
+        label->setScale(.22f);
+        label->setPosition({27.f, 8.f});
+        holder->addChild(label);
+
+        visual = holder;
+    }
 
     auto button = CCMenuItemSpriteExtra::create(
-        sprite,
+        visual,
         this,
         menu_selector(DemonTrackerPopup::onCategory)
     );
     button->setTag(tag);
     m_buttonMenu->addChildAtPosition(button, Anchor::Center, offset);
-
     return button;
 }
 

@@ -1,42 +1,12 @@
 #include "DemonDetailPopup.hpp"
-
-namespace {
-    CCLayerColor* makePanel(CCSize const& size, ccColor4B const& color) {
-        auto panel = CCLayerColor::create(color, size.width, size.height);
-        panel->ignoreAnchorPointForPosition(false);
-        panel->setAnchorPoint({.5f, .5f});
-        return panel;
-    }
-
-    ccColor4B categoryColor(DemonCategory category) {
-        switch (category) {
-            case DemonCategory::Easy: return ccc4(47, 132, 73, 120);
-            case DemonCategory::Medium: return ccc4(171, 142, 46, 120);
-            case DemonCategory::Hard: return ccc4(184, 94, 39, 120);
-            case DemonCategory::Insane: return ccc4(166, 49, 53, 120);
-            case DemonCategory::Extreme: return ccc4(112, 59, 151, 120);
-            default: return ccc4(47, 76, 119, 120);
-        }
-    }
-
-    char const* categoryShortName(DemonCategory category) {
-        switch (category) {
-            case DemonCategory::Easy: return "EASY";
-            case DemonCategory::Medium: return "MEDIUM";
-            case DemonCategory::Hard: return "HARD";
-            case DemonCategory::Insane: return "INSANE";
-            case DemonCategory::Extreme: return "EXTREME";
-            default: return "ALL";
-        }
-    }
-}
+#include "DemonUI.hpp"
 
 bool DemonDetailPopup::init(
     DemonEntry const* demon,
     int globalRank,
     int categoryRank
 ) {
-    if (!Popup::init(430.f, 280.f)) {
+    if (!Popup::init(430.f, 285.f)) {
         return false;
     }
 
@@ -46,50 +16,53 @@ bool DemonDetailPopup::init(
 
     this->setTitle(demon->name.c_str());
 
-    auto badge = makePanel({100.f, 22.f}, categoryColor(demon->category));
-    m_mainLayer->addChildAtPosition(badge, Anchor::Center, ccp(0.f, 84.f));
+    if (auto icon = demonui::difficultyIcon(demon->category, .46f)) {
+        m_mainLayer->addChildAtPosition(icon, Anchor::Center, ccp(-150.f, 82.f));
+    }
 
-    auto badgeLabel = CCLabelBMFont::create(categoryShortName(demon->category), "goldFont.fnt");
-    badgeLabel->setScale(.28f);
-    m_mainLayer->addChildAtPosition(badgeLabel, Anchor::Center, ccp(0.f, 84.f));
+    auto categoryLabel = CCLabelBMFont::create(demonui::categoryName(demon->category), "goldFont.fnt");
+    categoryLabel->setScale(.33f);
+    categoryLabel->setAnchorPoint({0.f, .5f});
+    m_mainLayer->addChildAtPosition(categoryLabel, Anchor::Center, ccp(-118.f, 84.f));
 
-    auto globalPanel = makePanel({148.f, 55.f}, ccc4(29, 47, 71, 118));
-    auto categoryPanel = makePanel({148.f, 55.f}, categoryColor(demon->category));
-    m_mainLayer->addChildAtPosition(globalPanel, Anchor::Center, ccp(-82.f, 45.f));
-    m_mainLayer->addChildAtPosition(categoryPanel, Anchor::Center, ccp(82.f, 45.f));
+    auto card = demonui::panel({350.f, 135.f}, ccc3(91, 48, 31), 235);
+    m_mainLayer->addChildAtPosition(card, Anchor::Center, ccp(0.f, 14.f));
 
     auto globalTitle = CCLabelBMFont::create("RANKING GLOBAL", "goldFont.fnt");
-    globalTitle->setScale(.24f);
-    globalTitle->setOpacity(190);
-    m_mainLayer->addChildAtPosition(globalTitle, Anchor::Center, ccp(-82.f, 59.f));
+    globalTitle->setScale(.23f);
+    globalTitle->setOpacity(185);
+    m_mainLayer->addChildAtPosition(globalTitle, Anchor::Center, ccp(-88.f, 52.f));
 
     auto globalText = fmt::format("#{}", globalRank);
     auto globalLabel = CCLabelBMFont::create(globalText.c_str(), "bigFont.fnt");
-    globalLabel->setScale(.62f);
-    m_mainLayer->addChildAtPosition(globalLabel, Anchor::Center, ccp(-82.f, 39.f));
+    globalLabel->setScale(.64f);
+    m_mainLayer->addChildAtPosition(globalLabel, Anchor::Center, ccp(-88.f, 29.f));
 
-    auto categoryTitle = fmt::format("{} RANK", categoryShortName(demon->category));
-    auto categoryTitleLabel = CCLabelBMFont::create(categoryTitle.c_str(), "goldFont.fnt");
-    categoryTitleLabel->setScale(.24f);
-    categoryTitleLabel->setOpacity(210);
-    m_mainLayer->addChildAtPosition(categoryTitleLabel, Anchor::Center, ccp(82.f, 59.f));
+    auto categoryTitleText = fmt::format("{} RANK", demonui::categoryName(demon->category));
+    auto categoryTitle = CCLabelBMFont::create(categoryTitleText.c_str(), "goldFont.fnt");
+    categoryTitle->setScale(.20f);
+    categoryTitle->setOpacity(185);
+    categoryTitle->limitLabelWidth(135.f, .20f, .14f);
+    m_mainLayer->addChildAtPosition(categoryTitle, Anchor::Center, ccp(88.f, 52.f));
 
-    auto categoryText = fmt::format("#{}", categoryRank);
-    auto categoryRankLabel = CCLabelBMFont::create(categoryText.c_str(), "bigFont.fnt");
-    categoryRankLabel->setScale(.62f);
-    m_mainLayer->addChildAtPosition(categoryRankLabel, Anchor::Center, ccp(82.f, 39.f));
+    auto categoryRankText = fmt::format("#{}", categoryRank);
+    auto categoryRankLabel = CCLabelBMFont::create(categoryRankText.c_str(), "bigFont.fnt");
+    categoryRankLabel->setScale(.64f);
+    m_mainLayer->addChildAtPosition(categoryRankLabel, Anchor::Center, ccp(88.f, 29.f));
 
-    auto infoPanel = makePanel({335.f, 58.f}, ccc4(25, 40, 61, 105));
-    m_mainLayer->addChildAtPosition(infoPanel, Anchor::Center, ccp(0.f, -6.f));
+    auto divider = CCLayerColor::create(ccc4(255, 255, 255, 45), 1.f, 43.f);
+    divider->ignoreAnchorPointForPosition(false);
+    divider->setAnchorPoint({.5f, .5f});
+    m_mainLayer->addChildAtPosition(divider, Anchor::Center, ccp(0.f, 37.f));
 
     auto creatorText = demon->creator.empty()
         ? std::string("Creador: ---")
         : fmt::format("Creador: {}", demon->creator);
     auto creatorLabel = CCLabelBMFont::create(creatorText.c_str(), "goldFont.fnt");
-    creatorLabel->setScale(.31f);
-    creatorLabel->limitLabelWidth(300.f, .31f, .22f);
+    creatorLabel->setScale(.28f);
+    creatorLabel->limitLabelWidth(300.f, .28f, .20f);
     creatorLabel->setOpacity(215);
-    m_mainLayer->addChildAtPosition(creatorLabel, Anchor::Center, ccp(0.f, 8.f));
+    m_mainLayer->addChildAtPosition(creatorLabel, Anchor::Center, ccp(0.f, -6.f));
 
     auto idText = demon->officialLevelID > 0
         ? fmt::format("Nivel oficial #{}", demon->officialLevelID)
@@ -97,73 +70,64 @@ bool DemonDetailPopup::init(
             ? fmt::format("Level ID: {}", demon->levelID)
             : std::string("Level ID: no disponible");
     auto idLabel = CCLabelBMFont::create(idText.c_str(), "goldFont.fnt");
-    idLabel->setScale(.27f);
-    idLabel->setOpacity(165);
-    m_mainLayer->addChildAtPosition(idLabel, Anchor::Center, ccp(0.f, -7.f));
+    idLabel->setScale(.24f);
+    idLabel->setOpacity(170);
+    m_mainLayer->addChildAtPosition(idLabel, Anchor::Center, ccp(0.f, -23.f));
 
     auto statsText = fmt::format("Intentos: {}   Rebeats: {}", demon->attempts, demon->rebeats);
     auto statsLabel = CCLabelBMFont::create(statsText.c_str(), "goldFont.fnt");
-    statsLabel->setScale(.25f);
-    statsLabel->setOpacity(150);
-    m_mainLayer->addChildAtPosition(statsLabel, Anchor::Center, ccp(0.f, -21.f));
-
-    auto scorePanel = makePanel({165.f, 31.f}, ccc4(117, 91, 32, 105));
-    m_mainLayer->addChildAtPosition(scorePanel, Anchor::Center, ccp(0.f, -49.f));
+    statsLabel->setScale(.22f);
+    statsLabel->setOpacity(155);
+    m_mainLayer->addChildAtPosition(statsLabel, Anchor::Center, ccp(0.f, -39.f));
 
     auto scoreText = demon->personalScore >= 0.0
-        ? fmt::format("Score personal: {:.1f}", demon->personalScore)
-        : std::string("Score personal: BASE");
+        ? fmt::format("Difficulty Score: {:.1f}", demon->personalScore)
+        : std::string("Difficulty Score: importado");
     auto scoreLabel = CCLabelBMFont::create(scoreText.c_str(), "goldFont.fnt");
-    scoreLabel->setScale(.30f);
-    m_mainLayer->addChildAtPosition(scoreLabel, Anchor::Center, ccp(0.f, -49.f));
+    scoreLabel->setScale(.29f);
+    m_mainLayer->addChildAtPosition(scoreLabel, Anchor::Center, ccp(0.f, -62.f));
 
     if (demon->officialLevelID > 0) {
-        auto viewSprite = ButtonSprite::create(
-            "VER NIVEL",
-            "bigFont.fnt",
-            "GJ_button_04.png",
-            .8f
-        );
-        viewSprite->setScale(.52f);
-
+        auto infoSprite = CCSprite::createWithSpriteFrameName("GJ_infoIcon_001.png");
+        infoSprite->setScale(.72f);
         auto viewButton = CCMenuItemSpriteExtra::create(
-            viewSprite,
+            infoSprite,
             this,
             menu_selector(DemonDetailPopup::onOpenLevel)
         );
-        m_buttonMenu->addChildAtPosition(viewButton, Anchor::Center, ccp(-72.f, -84.f));
+        m_buttonMenu->addChildAtPosition(viewButton, Anchor::Center, ccp(-58.f, -93.f));
 
-        auto playSprite = ButtonSprite::create(
-            "JUGAR",
-            "bigFont.fnt",
-            "GJ_button_01.png",
-            .8f
-        );
-        playSprite->setScale(.52f);
-
+        auto playSprite = CCSprite::createWithSpriteFrameName("GJ_playBtn2_001.png");
+        playSprite->setScale(.64f);
         auto playButton = CCMenuItemSpriteExtra::create(
             playSprite,
             this,
             menu_selector(DemonDetailPopup::onPlayOfficial)
         );
-        m_buttonMenu->addChildAtPosition(playButton, Anchor::Center, ccp(72.f, -84.f));
+        m_buttonMenu->addChildAtPosition(playButton, Anchor::Center, ccp(58.f, -93.f));
+
+        auto infoLabel = CCLabelBMFont::create("INFO", "goldFont.fnt");
+        infoLabel->setScale(.20f);
+        m_mainLayer->addChildAtPosition(infoLabel, Anchor::Center, ccp(-58.f, -118.f));
+
+        auto playLabel = CCLabelBMFont::create("JUGAR", "goldFont.fnt");
+        playLabel->setScale(.20f);
+        m_mainLayer->addChildAtPosition(playLabel, Anchor::Center, ccp(58.f, -118.f));
     }
     else {
-        auto caption = demon->levelID > 0 ? "ABRIR NIVEL" : "BUSCAR / JUGAR";
-        auto openSprite = ButtonSprite::create(
-            caption,
-            "bigFont.fnt",
-            "GJ_button_01.png",
-            .8f
-        );
-        openSprite->setScale(.54f);
-
+        auto playSprite = CCSprite::createWithSpriteFrameName("GJ_playBtn2_001.png");
+        playSprite->setScale(.66f);
         auto openButton = CCMenuItemSpriteExtra::create(
-            openSprite,
+            playSprite,
             this,
             menu_selector(DemonDetailPopup::onOpenLevel)
         );
-        m_buttonMenu->addChildAtPosition(openButton, Anchor::Center, ccp(0.f, -84.f));
+        m_buttonMenu->addChildAtPosition(openButton, Anchor::Center, ccp(0.f, -93.f));
+
+        auto caption = demon->levelID > 0 ? "ABRIR NIVEL" : "BUSCAR / JUGAR";
+        auto label = CCLabelBMFont::create(caption, "goldFont.fnt");
+        label->setScale(.20f);
+        m_mainLayer->addChildAtPosition(label, Anchor::Center, ccp(0.f, -118.f));
     }
 
     return true;

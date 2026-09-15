@@ -1,6 +1,16 @@
 # Changelog
 
-## v0.3.0 - En desarrollo
+## v0.3.1 - En desarrollo
+
+- Sustituidos los botones planos de dificultad por las caras nativas de Easy, Medium, Hard, Insane y Extreme Demon.
+- Redisenada la lista de niveles para parecerse mas a una lista de Geometry Dash: icono de dificultad, ranking, nombre, score y flecha de acceso.
+- Toda la fila del demon ahora funciona como acceso a su ficha; ya no depende de un boton VER separado.
+- Redisenada la ficha individual para eliminar los grandes bloques de color y usar un unico panel mas limpio.
+- Anadida la cara de la dificultad en la ficha del demon.
+- Los botones de INFO y JUGAR usan iconos nativos de Geometry Dash.
+- Los demons importados muestran `Importado` en vez de `BASE`.
+
+## v0.3.0
 
 - Redisenada la pantalla principal con un panel de resumen mas limpio y botones por categoria con colores distintos.
 - Redisenadas las listas de demons como tarjetas con rango, categoria, score y boton de acceso a la ficha.
