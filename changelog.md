@@ -1,6 +1,14 @@
 # Changelog
 
-## v0.2.0 - En desarrollo
+## v0.3.0 - En desarrollo
+
+- Redisenada la pantalla principal con un panel de resumen mas limpio y botones por categoria con colores distintos.
+- Redisenadas las listas de demons como tarjetas con rango, categoria, score y boton de acceso a la ficha.
+- Redisenada la ficha individual con paneles de ranking global y por categoria, creador, Level ID, intentos, rebats y score personal.
+- Redisenado el cuestionario con panel de pregunta, valor destacado, botones diferenciados y barra de progreso.
+- Ajustados tamanos y espaciados para que la interfaz sea mas clara tanto con mouse como con pantalla tactil.
+
+## v0.2.0
 
 - Anadido guardado persistente de la clasificacion mediante el sistema de saved values de Geode.
 - Anadida deteccion automatica al completar un Demon fuera de Practice Mode.

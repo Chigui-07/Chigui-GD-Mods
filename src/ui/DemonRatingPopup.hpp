@@ -17,6 +17,11 @@ protected:
     CCLabelBMFont* m_valueLabel = nullptr;
     CCLabelBMFont* m_pageLabel = nullptr;
 
+    CCLayerColor* m_questionPanel = nullptr;
+    CCLayerColor* m_valuePanel = nullptr;
+    CCLayerColor* m_progressTrack = nullptr;
+    CCLayerColor* m_progressFill = nullptr;
+
     CCMenuItemSpriteExtra* m_continueButton = nullptr;
     CCMenuItemSpriteExtra* m_prevButton = nullptr;
     CCMenuItemSpriteExtra* m_nextButton = nullptr;

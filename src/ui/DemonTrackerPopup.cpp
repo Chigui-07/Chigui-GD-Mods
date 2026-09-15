@@ -2,8 +2,28 @@
 #include "DemonListPopup.hpp"
 #include "../data/DemonData.hpp"
 
+namespace {
+    CCLayerColor* makePanel(CCSize const& size, ccColor4B const& color) {
+        auto panel = CCLayerColor::create(color, size.width, size.height);
+        panel->ignoreAnchorPointForPosition(false);
+        panel->setAnchorPoint({.5f, .5f});
+        return panel;
+    }
+
+    char const* categoryButtonTexture(int tag) {
+        switch (tag) {
+            case 1: return "GJ_button_01.png"; // Easy
+            case 2: return "GJ_button_06.png"; // Medium
+            case 3: return "GJ_button_06.png"; // Hard
+            case 4: return "GJ_button_05.png"; // Insane
+            case 5: return "GJ_button_02.png"; // Extreme
+            default: return "GJ_button_04.png"; // All
+        }
+    }
+}
+
 bool DemonTrackerPopup::init() {
-    if (!Popup::init(420.f, 250.f)) {
+    if (!Popup::init(440.f, 275.f)) {
         return false;
     }
 
@@ -11,31 +31,41 @@ bool DemonTrackerPopup::init() {
     this->setTitle("Demon Tracker");
 
     auto const& demons = getDemonEntries();
+
+    auto heroPanel = makePanel({370.f, 62.f}, ccc4(24, 44, 72, 115));
+    m_mainLayer->addChildAtPosition(heroPanel, Anchor::Center, ccp(0.f, 56.f));
+
     auto hardestText = demons.empty()
         ? std::string("Hardest: ---")
         : fmt::format("Hardest: {}", demons.front().name);
 
     auto hardestLabel = CCLabelBMFont::create(hardestText.c_str(), "bigFont.fnt");
-    hardestLabel->setScale(.55f);
-    hardestLabel->limitLabelWidth(330.f, .55f, .30f);
-    m_mainLayer->addChildAtPosition(hardestLabel, Anchor::Center, ccp(0.f, 68.f));
+    hardestLabel->setScale(.54f);
+    hardestLabel->limitLabelWidth(330.f, .54f, .30f);
+    m_mainLayer->addChildAtPosition(hardestLabel, Anchor::Center, ccp(0.f, 67.f));
 
-    auto countText = fmt::format("Demons registrados: {}", demons.size());
+    auto countText = fmt::format("{} demons registrados", demons.size());
     auto countLabel = CCLabelBMFont::create(countText.c_str(), "goldFont.fnt");
-    countLabel->setScale(.48f);
-    m_mainLayer->addChildAtPosition(countLabel, Anchor::Center, ccp(0.f, 45.f));
+    countLabel->setScale(.39f);
+    countLabel->setOpacity(220);
+    m_mainLayer->addChildAtPosition(countLabel, Anchor::Center, ccp(0.f, 43.f));
 
-    this->createCategoryButton("ALL", 0, ccp(0.f, 12.f));
-    this->createCategoryButton("EASY", 1, ccp(-100.f, -25.f));
-    this->createCategoryButton("MEDIUM", 2, ccp(0.f, -25.f));
-    this->createCategoryButton("HARD", 3, ccp(100.f, -25.f));
-    this->createCategoryButton("INSANE", 4, ccp(-55.f, -65.f));
-    this->createCategoryButton("EXTREME", 5, ccp(55.f, -65.f));
+    auto sectionLabel = CCLabelBMFont::create("LISTAS DE DEMONS", "goldFont.fnt");
+    sectionLabel->setScale(.30f);
+    sectionLabel->setOpacity(180);
+    m_mainLayer->addChildAtPosition(sectionLabel, Anchor::Center, ccp(0.f, 15.f));
 
-    auto footer = CCLabelBMFont::create("v0.2.0 - ranking automatico", "goldFont.fnt");
-    footer->setScale(.32f);
-    footer->setOpacity(150);
-    m_mainLayer->addChildAtPosition(footer, Anchor::Bottom, ccp(0.f, 12.f));
+    this->createCategoryButton("ALL", 0, ccp(-120.f, -11.f));
+    this->createCategoryButton("EASY", 1, ccp(0.f, -11.f));
+    this->createCategoryButton("MEDIUM", 2, ccp(120.f, -11.f));
+    this->createCategoryButton("HARD", 3, ccp(-120.f, -50.f));
+    this->createCategoryButton("INSANE", 4, ccp(0.f, -50.f));
+    this->createCategoryButton("EXTREME", 5, ccp(120.f, -50.f));
+
+    auto footer = CCLabelBMFont::create("v0.3.0 - visual refresh", "goldFont.fnt");
+    footer->setScale(.28f);
+    footer->setOpacity(130);
+    m_mainLayer->addChildAtPosition(footer, Anchor::Bottom, ccp(0.f, 10.f));
 
     return true;
 }
@@ -48,10 +78,10 @@ CCMenuItemSpriteExtra* DemonTrackerPopup::createCategoryButton(
     auto sprite = ButtonSprite::create(
         text,
         "bigFont.fnt",
-        "GJ_button_01.png",
+        categoryButtonTexture(tag),
         .8f
     );
-    sprite->setScale(.58f);
+    sprite->setScale(.54f);
 
     auto button = CCMenuItemSpriteExtra::create(
         sprite,
